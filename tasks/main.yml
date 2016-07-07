@@ -1,0 +1,70 @@
+---
+
+- name: Check prerequisites
+  fail:
+    msg: "You MUST provide a consul configuration through the variable consul_server_config_path"
+  when: consul_server_config_path is not defined and consul_server_mode != 'development'
+
+- name: Create consul user
+  user:
+    name: "{{consul_user}}"
+
+- name: Create consul directory
+  file:
+    path: "{{consul_dir}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+
+- name: Ensure consul Data directory exists
+  file:
+    path: "{{consul_data_directory}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  tags: config
+
+- name: Make consul_user consul directory owner
+  file:
+    path: "{{consul_dir}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+    recurse: yes
+
+- name: Create consul log directory
+  file:
+    path: "{{consul_server_log_dir}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  when: consul_server
+  register: consul_log_task
+
+- name: Create consul Configuration Directory
+  file:
+    path: "{{consul_server_config_path}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  when: "consul_server_config_path is defined"
+
+# - name: Create consul SSL Directory
+#   file:
+#     path: "{{consul_server_ssl_path}}"
+#     state: directory
+#     owner: "{{consul_user}}"
+#     group: "{{consul_user}}"
+
+# - name: create self-signed SSL cert
+#   command: "openssl req -new -nodes -x509 -subj \"/C=US/ST=Washington/L=Seattle/O=IT/CN={{ansible_fqdn}}\" -days 365 -keyout {{consul_server_ssl_path}}/server.key -out {{consul_server_ssl_path}}/server.crt -extensions v3_ca creates={{consul_server_ssl_path}}/server.crt"
+#   notify: 
+#    - systemd reload consul
+#    - upstart reload consul
+
+# - name: Link Cert to local anchors
+#   file: "src={{consul_server_ssl_path}}/server.crt dest=/etc/pki/ca-trust/source/anchors/consul-server.crt state=hard"
+#   notify: update ca
+
+- name: Add consul Configuration file
+  template: "src=consul-config.j2 dest={{consul_server_config_path}}/{{consul_server_config}}"

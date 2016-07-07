@@ -1,0 +1,4 @@
+---
+# defaults file for deploy_consul
+consul_version: 0.6.4
+consul_max_servers: 5

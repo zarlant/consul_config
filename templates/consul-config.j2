@@ -1,0 +1,18 @@
+{
+  "bootstrap_expect": {{ play_hosts| length | max_int(consul_max_servers) }},
+  "datacenter": "{{consul_datacenter}}",
+  "data_dir": "{{consul_data_directory}}",
+  "server": true,
+  "ui": true,
+  "log_level": "INFO",
+  "node_name": "{{ansible_fqdn}}",
+  "client_addr": "{{ ansible_default_ipv4.address }}",
+  "advertise_addr": "{{ ansible_default_ipv4.address }}",
+  "addresses": {
+    "https": "{{ ansible_default_ipv4.address }}"
+  },
+  "ports": {
+    "https": 8080
+  },
+  "retry_join": {{ play_hosts | remove_element(ansible_fqdn)}}
+}

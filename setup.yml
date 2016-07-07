@@ -1,0 +1,6 @@
+---
+
+- name: Setup Consul
+  hosts: "consul-{{env}}"
+  roles:
+    - deploy_consul
