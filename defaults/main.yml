@@ -2,3 +2,15 @@
 # defaults file for deploy_consul
 consul_version: 0.6.4
 consul_max_servers: 5
+consul_user: consul
+consul_dir: /opt/consul
+consul_data_directory: /opt/data/consul
+consul_datacenter: LAS
+consul_server: True
+consul_server_mode: production
+consul_server_log_dir: /var/log/consul
+consul_server_log_level: info
+consul_server_config: server.json
+consul_server_config_path: /etc/consul/conf.d
+consul_server_ssl_path: "{{ consul_server_config_path }}/ssl"
+consul_url: "https://releases.hashicorp.com/consul/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
