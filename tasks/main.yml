@@ -9,19 +9,23 @@
   user:
     name: "{{consul_user}}"
 
+- name: Create consul group
+  group:
+    name: "{{consul_group}}"
+
 - name: Create consul directory
   file:
     path: "{{consul_dir}}"
     state: directory
     owner: "{{consul_user}}"
-    group: "{{consul_user}}"
+    group: "{{consul_group}}"
 
 - name: Ensure consul Data directory exists
   file:
     path: "{{consul_data_directory}}"
     state: directory
     owner: "{{consul_user}}"
-    group: "{{consul_user}}"
+    group: "{{consul_group}}"
   tags: config
 
 - name: Make consul_user consul directory owner
@@ -29,7 +33,7 @@
     path: "{{consul_dir}}"
     state: directory
     owner: "{{consul_user}}"
-    group: "{{consul_user}}"
+    group: "{{consul_group}}"
     recurse: yes
 
 - name: Create consul log directory
@@ -37,7 +41,7 @@
     path: "{{consul_server_log_dir}}"
     state: directory
     owner: "{{consul_user}}"
-    group: "{{consul_user}}"
+    group: "{{consul_group}}"
   when: consul_server
   register: consul_log_task
 
@@ -46,7 +50,7 @@
     path: "{{consul_server_config_path}}"
     state: directory
     owner: "{{consul_user}}"
-    group: "{{consul_user}}"
+    group: "{{consul_group}}"
   when: "consul_server_config_path is defined"
 
 # - name: Create consul SSL Directory
@@ -54,7 +58,7 @@
 #     path: "{{consul_server_ssl_path}}"
 #     state: directory
 #     owner: "{{consul_user}}"
-#     group: "{{consul_user}}"
+#     group: "{{consul_group}}"
 
 # - name: create self-signed SSL cert
 #   command: "openssl req -new -nodes -x509 -subj \"/C=US/ST=Washington/L=Seattle/O=IT/CN={{ansible_fqdn}}\" -days 365 -keyout {{consul_server_ssl_path}}/server.key -out {{consul_server_ssl_path}}/server.crt -extensions v3_ca creates={{consul_server_ssl_path}}/server.crt"

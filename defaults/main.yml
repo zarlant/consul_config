@@ -3,6 +3,7 @@
 consul_version: 0.6.4
 consul_max_servers: 5
 consul_user: consul
+consul_group: consul
 consul_dir: /opt/consul
 consul_data_directory: /opt/data/consul
 consul_datacenter: LAS
